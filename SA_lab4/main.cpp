@@ -5,15 +5,13 @@ using namespace std;
 #define pau system("pause")
 bool symbolIs(const vector<char> &what, char symbol)
 {
-
     for (size_t i = 0; i < what.size(); i++)
         if (symbol == what[i])
             return 1;
     return 0;
 }
-#define push(symbol) stack.push(symbol)
-#define isEmpty() stack.isEmpty()
-#define peek() stack.peek()
+
+
 
 Tree *read(ifstream &filer)
 {
@@ -30,6 +28,7 @@ Tree *read(ifstream &filer)
     filer >> symbol;           // считываем )
     return tree;
 }
+
 int stoi(char x)
 {
     switch (x)
@@ -87,6 +86,7 @@ int stoi(char x)
     }
     }
 }
+
 void printTree(Tree *tree, string tab)
 {
     if (tree != nullptr)
@@ -97,6 +97,7 @@ void printTree(Tree *tree, string tab)
         printTree(tree->right, new_tab);
     }
 }
+
 int s4et(Tree *tree)
 {
     vector<char> terminal = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
@@ -116,6 +117,7 @@ int s4et(Tree *tree)
         break;
     }
 }
+
 int main()
 {
     ifstream filer("formula.txt");
@@ -135,7 +137,6 @@ int main()
     printTree(tree, "");
     int x = s4et(tree);
     cout << x;
-    
 
     pau;
     return 0;
