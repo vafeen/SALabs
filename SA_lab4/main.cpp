@@ -10,81 +10,47 @@ bool symbolIs(const vector<char> &what, char symbol)
             return 1;
     return 0;
 }
-
-
-
-Tree *read(ifstream &filer)
+Tree *buildTree(string formula, int start, int end)
 {
-    char symbol;
-    filer >> symbol; // считываем вторую (
-    filer >> symbol; // считываем первое число
-    Tree *tree = nullptr;
-    init(tree, '0');           // кидаем в голову ноль вместо знака
-    init(tree->left, symbol);  // кидаем в левое поддерево число
-    filer >> symbol;           // считываем знак
-    setTree(tree, symbol);     // кидаем в голову знак
-    filer >> symbol;           // считываем второе число
-    init(tree->right, symbol); // кидаем его в правую часть
-    filer >> symbol;           // считываем )
-    return tree;
-}
-
-int stoi(char x)
-{
-    switch (x)
+    if (start > end)
     {
-
-    case '0':
+        return nullptr;
+    }
+    if (start == end)
     {
-        return 0;
-        break;
+        Tree *node = new Tree();
+        node->data = formula[start];
+        node->left = nullptr;
+        node->right = nullptr;
+        return node;
     }
-    case '1':
+    int count = 0;
+    int i = start;
+    while (i <= end)
     {
-        return 1;
-        break;
+        if (formula[i] == '(')
+        {
+            count++;
+        }
+        else if (formula[i] == ')')
+        {
+            count--;
+        }
+        else if (count == 0 && (formula[i] == '+' || formula[i] == '-' || formula[i] == '*' || formula[i] == '/'))
+        {
+            Tree *node = new Tree();
+            node->data = formula[i];
+            node->left = buildTree(formula, start, i - 1);
+            node->right = buildTree(formula, i + 1, end);
+            return node;
+        }
+        i++;
     }
-    case '2':
+    if (formula[start] == '(' && formula[end] == ')')
     {
-        return 2;
-        break;
+        return buildTree(formula, start + 1, end - 1);
     }
-    case '3':
-    {
-        return 3;
-        break;
-    }
-    case '4':
-    {
-        return 4;
-        break;
-    }
-    case '5':
-    {
-        return 5;
-        break;
-    }
-    case '6':
-    {
-        return 6;
-        break;
-    }
-    case '7':
-    {
-        return 7;
-        break;
-    }
-    case '8':
-    {
-        return 8;
-        break;
-    }
-    case '9':
-    {
-        return 9;
-        break;
-    }
-    }
+    return nullptr;
 }
 
 void printTree(Tree *tree, string tab)
@@ -97,47 +63,47 @@ void printTree(Tree *tree, string tab)
         printTree(tree->right, new_tab);
     }
 }
-
+int stoi(char symbol)
+{
+    int sym = symbol;
+    if (sym >= 48 && sym <= 57)
+        return sym - 48;
+    return 0;
+}
 int s4et(Tree *tree)
 {
-    vector<char> terminal = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
-    if (symbolIs(terminal, tree->data))
-        return stoi(tree->data);
-
-    switch (tree->data)
+    if (tree)
     {
-    case '+':
-        return s4et(tree->left) + s4et(tree->right);
-        break;
-    case '-':
-        return s4et(tree->left) - s4et(tree->right);
-        break;
-    case '*':
-        return s4et(tree->left) * s4et(tree->right);
-        break;
+        vector<char> terminal = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
+        if (symbolIs(terminal, tree->data))
+            return stoi(tree->data);
+
+        switch (tree->data)
+        {
+        case '+':
+            return s4et(tree->left) + s4et(tree->right);
+            break;
+        case '-':
+            return s4et(tree->left) - s4et(tree->right);
+            break;
+        case '*':
+            return s4et(tree->left) * s4et(tree->right);
+            break;
+        }
     }
 }
 
 int main()
 {
     ifstream filer("formula.txt");
-    Charstack stack;
     Tree *tree = nullptr;
-    char symbol;
-    vector<char> znak = {'+', '-', '*'};
-    vector<char> terminal = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
-
-    filer >> symbol;               // считать (
-    Tree *lefttree = read(filer);  // считать левую часть формулы
-    filer >> symbol;               // считать знак
-    Tree *righttree = read(filer); // считать правую часть формулы
-
-    init(tree, symbol, lefttree, righttree);
-    filer >> symbol; // считать )
+    // vector<char> terminal = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
+    string formula = "((5+5)*((3*5)+(5*5)))";//числа [0;9]
+    tree = buildTree(formula, 0, formula.length() - 1);
     printTree(tree, "");
-    int x = s4et(tree);
-    cout << x;
 
+    cout << "\n\n\n"
+         << s4et(tree) << "\n";
     pau;
     return 0;
 }
