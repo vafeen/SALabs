@@ -2,22 +2,29 @@
 #include <vector>
 
 using namespace std;
+
 #define pau system("pause")
+
+// Функция для проверки, является ли символ символом из заданного вектора
 bool symbolIs(const vector<char> &what, char symbol)
 {
     for (size_t i = 0; i < what.size(); i++)
         if (symbol == what[i])
-            return 1;
-    return 0;
+            return 1; // Возвращаем true, если символ найден в векторе
+    return 0;         // Возвращаем false, если символ не найден в векторе
 }
+
+// Функция для построения дерева на основе заданной формулы
 Tree *buildTree(string formula, int start, int end)
 {
+    // Условие выхода из рекурсии
     if (start > end)
     {
         return nullptr;
     }
     if (start == end)
     {
+        // Создание нового узла для символа в формуле
         Tree *node = new Tree();
         node->data = formula[start];
         node->left = nullptr;
@@ -38,6 +45,7 @@ Tree *buildTree(string formula, int start, int end)
         }
         else if (count == 0 && (formula[i] == '+' || formula[i] == '-' || formula[i] == '*' || formula[i] == '/'))
         {
+            // Создание нового узла для арифметической операции
             Tree *node = new Tree();
             node->data = formula[i];
             node->left = buildTree(formula, start, i - 1);
@@ -48,11 +56,13 @@ Tree *buildTree(string formula, int start, int end)
     }
     if (formula[start] == '(' && formula[end] == ')')
     {
+        // Игнорирование скобок и построение дерева внутри них
         return buildTree(formula, start + 1, end - 1);
     }
     return nullptr;
 }
 
+// Функция для вывода дерева в консоль
 void printTree(Tree *tree, string tab)
 {
     if (tree != nullptr)
@@ -63,6 +73,8 @@ void printTree(Tree *tree, string tab)
         printTree(tree->right, new_tab);
     }
 }
+
+// Функция для перевода символа-цифры в число
 int stoi(char symbol)
 {
     int sym = symbol;
@@ -70,24 +82,26 @@ int stoi(char symbol)
         return sym - 48;
     return 0;
 }
+
+// Функция для вычисления значения выражения, представленного деревом
 int s4et(Tree *tree)
 {
     if (tree)
     {
         vector<char> terminal = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
         if (symbolIs(terminal, tree->data))
-            return stoi(tree->data);
+            return stoi(tree->data); // Если узел содержит цифру, возвращаем его значение
 
         switch (tree->data)
         {
         case '+':
-            return s4et(tree->left) + s4et(tree->right);
+            return s4et(tree->left) + s4et(tree->right); // Для операции сложения, рекурсивно вызываем значение левого и правого поддеревьев
             break;
         case '-':
-            return s4et(tree->left) - s4et(tree->right);
+            return s4et(tree->left) - s4et(tree->right); // Для операции вычитания, рекурсивно вызываем значение левого и правого поддеревьев
             break;
         case '*':
-            return s4et(tree->left) * s4et(tree->right);
+            return s4et(tree->left) * s4et(tree->right); // Для операции умножения, рекурсивно вызываем значение левого и правого поддеревьев
             break;
         }
     }
@@ -95,15 +109,18 @@ int s4et(Tree *tree)
 
 int main()
 {
+    size_t counter = 1;
     ifstream filer("formula.txt");
-    Tree *tree = nullptr;
-    // vector<char> terminal = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
-    string formula = "((5+5)*((3*5)+(5*5)))";//числа [0;9]
-    tree = buildTree(formula, 0, formula.length() - 1);
-    printTree(tree, "");
-
-    cout << "\n\n\n"
-         << s4et(tree) << "\n";
+    string formula;
+    while (getline(filer, formula))
+    {
+        cout << "\n\n\nFORMULA =  " << formula << "\n";
+        Tree *tree = buildTree(formula, 0, formula.length() - 1);
+        printTree(tree, "");
+        cout << "\nResult = "
+             << s4et(tree);
+    }
+    cout << "\n\n\n\n\n\n";
     pau;
     return 0;
 }
