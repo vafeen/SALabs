@@ -3,11 +3,21 @@
 #include <vector>
 using namespace std;
 
-struct Tree
+class Tree
 {
+public:
     char data;
     Tree *left;
     Tree *right;
+    Tree()
+    {
+        left = nullptr;
+        right = nullptr;
+    }
+    Tree(char _data)
+    {
+        data = _data;
+    }
 };
 class Node
 {
