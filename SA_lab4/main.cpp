@@ -1,7 +1,4 @@
 #include "trees.hpp"
-#include <vector>
-
-using namespace std;
 
 #define pau system("pause")
 
@@ -63,15 +60,19 @@ Tree *buildTree(string formula, int start, int end)
 }
 
 // Функция для вывода дерева в консоль
-void printTree(Tree *tree, string tab)
+void printTree(Tree *root, int indent = 0)
 {
-    if (tree != nullptr)
+    if (root == nullptr)
     {
-        string new_tab = tab + "  ";
-        cout << tab << tree->data << '\n';
-        printTree(tree->left, new_tab);
-        printTree(tree->right, new_tab);
+        return;
     }
+    size_t tab = 4;
+    // вывод правого поддерева
+    printTree(root->right, indent + tab);
+    // вывод узла
+    cout << string(indent, ' ') << root->data << '\n';
+    // вывод левого поддерева
+    printTree(root->left, indent + tab);
 }
 
 // Функция для перевода символа-цифры в число
@@ -109,14 +110,13 @@ int s4et(Tree *tree)
 
 int main()
 {
-    size_t counter = 1;
     ifstream filer("formula.txt");
     string formula;
     while (getline(filer, formula))
     {
         cout << "\n\n\nFORMULA =  " << formula << "\n";
         Tree *tree = buildTree(formula, 0, formula.length() - 1);
-        printTree(tree, "");
+        printTree(tree, 0);
         cout << "\nResult = "
              << s4et(tree);
     }
