@@ -9,22 +9,14 @@ public:
     char data;
     Tree *left;
     Tree *right;
-    Tree(char _data)
-    {
-        data = _data;
-        left = nullptr;
-        right = nullptr;
-    }
-    Tree()
-    {
-        left = nullptr;
-        right = nullptr;
-    }
+    Tree(char _data) : left(nullptr), right(nullptr), data(_data) {}
+    Tree() : left(nullptr), right(nullptr) {}
     ~Tree()
     {
         delete left;
         delete right;
-        left = right = nullptr;
+        left = nullptr;
+        right = nullptr;
     }
 };
 class Node
@@ -32,11 +24,7 @@ class Node
 public:
     Tree *data;
     Node *next;
-    Node(Tree *elem)
-    {
-        data = elem;
-        next = nullptr;
-    }
+    Node(Tree *elem) : data(elem), next(nullptr) {}
 };
 class Charstack
 {
@@ -48,10 +36,7 @@ class Charstack
     Node *top;
 
 public:
-    Charstack()
-    {
-        top = nullptr;
-    }
+    Charstack() : top(nullptr) {}
     ~Charstack()
     {
         clear();
@@ -98,10 +83,7 @@ class Tstack
     Node *top;
 
 public:
-    Tstack()
-    {
-        top = nullptr;
-    }
+    Tstack() : top(nullptr) {}
     ~Tstack()
     {
         clear();
@@ -146,11 +128,7 @@ class TQueue
     Node *tail;
 
 public:
-    TQueue()
-    {
-        head = nullptr;
-        tail = nullptr;
-    }
+    TQueue() : head(nullptr), tail(nullptr) {}
     ~TQueue()
     {
         clear();
