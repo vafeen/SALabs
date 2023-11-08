@@ -22,19 +22,20 @@ Tree *buildTree(string formula, int start, int end)
     if (start == end)
     {
         // Создание нового узла для символа в формуле
-        Tree *node = new Tree(formula[start]);
+        Tree *node = new Tree();
+        node->data = formula[start];
+        // node->left = nullptr;
+        // node->right = nullptr;
         return node;
     }
     int count = 0;
     int i = start;
     while (i <= end)
     {
-        //считаем скобки 
         if (formula[i] == '(')
         {
             count++;
         }
-        //считаем скобки
         else if (formula[i] == ')')
         {
             count--;
@@ -42,7 +43,8 @@ Tree *buildTree(string formula, int start, int end)
         else if (count == 0 && (formula[i] == '+' || formula[i] == '-' || formula[i] == '*' || formula[i] == '/'))
         {
             // Создание нового узла для арифметической операции
-            Tree *node = new Tree(formula[i]);
+            Tree *node = new Tree();
+            node->data = formula[i];
             node->left = buildTree(formula, start, i - 1);
             node->right = buildTree(formula, i + 1, end);
             return node;
@@ -104,6 +106,7 @@ int s4et(Tree *tree)
             break;
         }
     }
+    return 0;
 }
 
 int main()

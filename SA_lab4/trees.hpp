@@ -9,14 +9,22 @@ public:
     char data;
     Tree *left;
     Tree *right;
+    Tree(char _data)
+    {
+        data = _data;
+        left = nullptr;
+        right = nullptr;
+    }
     Tree()
     {
         left = nullptr;
         right = nullptr;
     }
-    Tree(char _data)
+    ~Tree()
     {
-        data = _data;
+        delete left;
+        delete right;
+        left = right = nullptr;
     }
 };
 class Node
