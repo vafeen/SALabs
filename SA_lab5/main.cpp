@@ -1,26 +1,21 @@
-#include <iostream>
-// #include "trie-trees.hpp"
-#include "tree.hpp"
-using namespace std;
+#include"tree.hpp"
 
 int main()
 {
-    TrieNode *root = new TrieNode; // Создание корневого узла
-    root->symbol = '\0';           // Корневой символ
+    Trie trie;
+    vector<string> words = {"apple",
+                            "application",
+                            "bananas",
+                            "boook",
+                            "booox",
+                            "booooooof"};
+    for (size_t i = 0; i < words.size(); i++)
+    {
+        trie.addWord(words[i]);
+    }
+    trie.printTrie();
 
-    // Добавление слов в дерево
-    addWord(root, "apple");
-    addWord(root, "banana");
-    addWord(root, "car");
-    addWord(root, "cat");
-
-    // Поиск слов в дереве
-    // cout << "Search 'apple': " << (searchWord(root, "apple") ? "found" : "not found") << endl;
-    // cout << "Search 'banana': " << (searchWord(root, "banana") ? "found" : "not found") << endl;
-    // cout << "Search 'car': " << (searchWord(root, "car") ? "found" : "not found") << endl;
-    // cout << "Search 'cat': " << (searchWord(root, "cat") ? "found" : "not found") << endl;
-    // cout << "Search 'dog': " << (searchWord(root, "dog") ? "found" : "not found") << endl;
-    printTrie(root);
+    cout << "app: " << trie.countWordsStartingWith("ap") << '\n';
+    cout << "b: " << trie.countWordsStartingWith("b") << '\n';
     system("pause");
-    return 0;
 }

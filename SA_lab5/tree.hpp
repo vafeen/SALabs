@@ -1,114 +1,145 @@
 #include <iostream>
+#include <vector>
 using namespace std;
 
-class TrieNode
+struct TrieNode
 {
-public:
-    char symbol;       // Символ узла
-    TrieNode *next;    // Указатель на первого потомка узла
-    TrieNode *sibling; // Указатель на следующего соседа узла
-    TrieNode(){
-        next = nullptr; 
-        sibling = nullptr; 
+    char symbol;
+    vector<TrieNode *> children;
+    void printTrie(int tabs = 0)
+    {
+
+        // Вывод символа и уровня этого узла
+        for (int i = 0; i < tabs; i++)
+        {
+            cout << "---";
+        }
+        cout << symbol << '\n';
+
+        // рекурсивно вызываем вывод детей
+        for (size_t i = 0; i < children.size(); ++i)
+        {
+            children[i]->printTrie(tabs + 1);
+        }
     }
 };
 
-// Функция для добавления слова в дерево
-void addWord(TrieNode *root, string word)
+class Trie
 {
-    TrieNode *current = root; // Текущий узел
+    TrieNode *root;
 
-    // Перебор всех символов в слове
-    for (int i = 0; word[i] != '\0'; i++)
+    int countWordsHelper(TrieNode *current)
     {
-        char symbol = word[i];
-
-        // Поиск среди потомков текущего узла
-        TrieNode *child = current->next;
-        TrieNode *prevChild = nullptr;
-
-        while (child != nullptr && child->symbol != symbol)
+        int count = 0;
+        if (current->children.size() == 0)
         {
-            prevChild = child;
-            child = child->sibling;
+            count++;
+            return count;
         }
-
-        // Если символ не найден среди потомков, создаем новый узел
-        if (child == nullptr)
+        for (TrieNode *child : current->children)
         {
-            TrieNode *newNode = new TrieNode;
-            newNode->symbol = symbol;
-            newNode->next = nullptr;
-            newNode->sibling = nullptr;
+            count += countWordsHelper(child);
+        }
+        return count;
+    }
 
-            // Добавляем новый узел в список потомков текущего узла
-            if (prevChild == nullptr)
+public:
+    Trie()
+    {
+        root = new TrieNode();
+        root->symbol = ' ';
+    }
+
+    void printTrie()
+    {
+        root->printTrie();
+    }
+
+    // Функция добавления слова в Trie-дерево.
+    void addWord(string word)
+    {
+        TrieNode *current = root; // Устанавливаем указатель на корень Trie-дерева.
+
+        // Проходим по каждому символу в слове.
+        for (char c : word)
+        {
+            bool found = false; // Флаг, указывающий наличие символа в дочерних узлах текущего узла.
+
+            // Проверяем все дочерние узлы текущего узла.
+            for (TrieNode *child : current->children)
             {
-                current->next = newNode;
+                // Если найден дочерний узел с символом c,
+                // перемещаем указатель на него и устанавливаем флаг found в true.
+                if (child->symbol == c)
+                {
+                    current = child;
+                    found = true;
+                    break;
+                }
             }
-            else
+
+            // Если символ c не найден среди дочерних узлов текущего узла,
+            // создаем новый узел с символом c и добавляем его в дочерние узлы текущего узла.
+            if (!found)
             {
-                prevChild->sibling = newNode;
+                TrieNode *newNode = new TrieNode();
+                newNode->symbol = c;
+                current->children.push_back(newNode);
+                current = newNode;
+            }
+        }
+    }
+    // Функция предназначена для поиска заданного слова в trie-дереве.
+    bool searchWord(string word)
+    {
+        TrieNode *current = root; // Устанавливаем текущую вершину в корневую вершину дерева.
+        for (char c : word)       // Проходим по каждому символу в заданном слове.
+        {
+            bool found = false;                       // Индикатор нахождения символа в дочерних вершинах текущей вершины.
+            for (TrieNode *child : current->children) // Проходим по каждому дочернему узлу текущей вершины.
+            {
+                if (child->symbol == c) // Если символ в дочерней вершине совпадает с текущим символом слова,
+                {
+                    current = child; // обновляем текущую вершину до этой дочерней вершины.
+                    found = true;    // Устанавливаем индикатор нахождения в true.
+                    break;           // Выходим из цикла, так как символ найден.
+                }
+            }
+            if (!found) // Если символ не найден в дочерних вершинах текущей вершины,
+            {
+                return false; // возвращаем false, так как слово не найдено в дереве.
+            }
+        }
+        return true; // Если прошли по всем символам и все символы найдены в дереве, возвращаем true.
+    }
+    int countWordsStartingWith(string prefix)
+    {
+        TrieNode *current = root; // Текущий узел, начиная с корневого
+
+        // Перебираем символы префикса
+        for (char c : prefix)
+        {
+            bool found = false;
+
+            // Ищем среди дочерних узлов текущего узла тот, у которого символ совпадает с текущим символом префикса
+            for (TrieNode *child : current->children)
+            {
+                if (child->symbol == c)
+                {
+                    current = child; // Переходим к найденному дочернему узлу
+                    found = true;
+                    break;
+                }
             }
 
-            // Переходим к новому узлу
-            current = newNode;
-        }
-        else
-        {
-            // Переходим к существующему узлу
-            current = child;
-        }
-    }
-}
-void printTrie(TrieNode *root, int level = 0)
-{
-    if (root == nullptr)
-    {
-        return;
-    }
-
-    // Выводим символ и уровень текущего узла
-    for (int i = 0; i < level; i++)
-    {
-        std::cout << "---";
-    }
-    std::cout << root->symbol << std::endl;
-
-    // Рекурсивно выводим всех детей текущего узла
-    printTrie(root->next, level + 1);
-
-    // Рекурсивно выводим всех соседей текущего узла
-    printTrie(root->sibling, level);
-}
-// Функция для поиска слова в дереве
-bool searchWord(TrieNode *root, string word)
-{
-    TrieNode *current = root; // Текущий узел
-
-    // Перебор всех символов в слове
-    for (int i = 0; word[i] != '\0'; i++)
-    {
-        char symbol = word[i];
-
-        // Поиск среди потомков текущего узла
-        TrieNode *child = current->next;
-
-        while (child != nullptr && child->symbol != symbol)
-        {
-            child = child->sibling;
+            // Если не найден дочерний узел с требуемым символом, значит нет слов в дереве с таким префиксом, возвращаем 0
+            if (!found)
+            {
+                return 0;
+            }
         }
 
-        // Если символ не найден, слово не принадлежит дереву
-        if (child == nullptr)
-        {
-            return false;
-        }
-
-        // Переходим к существующему узлу
-        current = child;
+        // Вызываем вспомогательную функцию, которая рекурсивно подсчитывает количество слов, начинающихся с текущего узла
+        return countWordsHelper(current);
     }
-
-    // Если все символы слова найдены, слово принадлежит дереву
-    return true;
-}
+};
