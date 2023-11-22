@@ -1,7 +1,6 @@
 #include <iostream>
 using namespace std;
 
-// Структура узла дерева
 class TrieNode
 {
 public:
