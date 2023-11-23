@@ -15,7 +15,7 @@ int main()
     }
     trie.printTrie();
 
-    cout << "app: " << trie.countWordsStartingWith("ap") << '\n';
+    cout << "boo: " << trie.countWordsStartingWith("boo") << '\n';
     cout << "b: " << trie.countWordsStartingWith("b") << '\n';
     system("pause");
 }
