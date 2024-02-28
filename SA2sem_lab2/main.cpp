@@ -1,14 +1,13 @@
 #include <windows.h>
 #include <iostream>
 #include <vector>
-#define intt int
 using namespace std;
 
 
-vector<intt> Combinations(const std::vector<intt> &arr, intt mask)
+vector<int> Combinations(const std::vector<int> &arr, int mask)
 {
-    vector<intt> result = {};
-    for (intt i = 0; i < arr.size(); ++i)
+    vector<int> result = {};
+    for (int i = 0; i < arr.size(); ++i)
     {
         if (mask & (1 << i))
         {
@@ -18,20 +17,20 @@ vector<intt> Combinations(const std::vector<intt> &arr, intt mask)
     return result;
 }
 
-vector<vector<intt>> allCombinations(const std::vector<intt> &arr)
+vector<vector<int>> allCombinations(const std::vector<int> &arr)
 {
-    intt n = arr.size();
-    vector<vector<intt>> result = {};
-    for (intt mask = 0; mask < (1 << n); ++mask)
+    int n = arr.size();
+    vector<vector<int>> result = {};
+    for (int mask = 0; mask < (1 << n); ++mask)
     {
         result.push_back(Combinations(arr, mask));
     }
     return result;
 }
 
-intt prod(vector<intt> vec)
+int prod(vector<int> vec)
 {
-    intt result = 1;
+    int result = 1;
     for (size_t i = 0; i < vec.size(); i++)
     {
         result *= vec[i];
@@ -39,14 +38,14 @@ intt prod(vector<intt> vec)
     return result;
 }
 
-void printt(vector<intt> dels)
+void print(vector<int> dels)
 {
     for (size_t i = 0; i < dels.size(); ++i)
     {
         cout << dels[i] << ' ';
     }
 }
-void printtt(vector<vector<intt>> dels)
+void printt(vector<vector<int>> dels)
 {
     for (size_t i = 0; i < dels.size(); ++i)
     {
@@ -70,18 +69,18 @@ int main()
     SetConsoleCP(65001);
     SetConsoleOutputCP(65001);
 
-    intt M = 1000;
+    int M = 1000;
 
-    vector<intt> dels = {2, 3, 4};
+    vector<int> dels = {2, 3, 4};
 
-    intt result = 0;
+    int result = 0;
 
-    vector<vector<intt>> comb = allCombinations(dels);
-    // printtt(comb);
+    vector<vector<int>> comb = allCombinations(dels);
+    // printt(comb);
     for (size_t i = 0; i < comb.size(); ++i)
     {
         size_t size = comb[i].size();
-        intt res_i;
+        int res_i;
         if (size % 2 != 0)
         {
             res_i = -M / prod(comb[i]);
