@@ -61,15 +61,18 @@ void printt(vector<vector<int>> dels)
 // 100 {2, 5 }
 // 100 - 100/2 - 100/5 + 100/(2*5) = 40
 
+// 100 {2,3,4}
+// 24 
+
 // 1000 {2,3,4}
-//  1000 - 1000/2 - 1000/3 - 1000/4 + 1000/2*3 + 1000/2*4 + 1000/3*4 - 1000/2*3*4
+//  1000 - 1000/2 - 1000/3 - 1000/4 + 1000/2*3 + 1000/2*4 + 1000/3*4 - 1000/2*3*4 = 250 
 
 int main()
 {
     SetConsoleCP(65001);
     SetConsoleOutputCP(65001);
 
-    int M = 1000;
+    int M = 100;
 
     vector<int> dels = {2, 3, 4};
 
@@ -89,9 +92,9 @@ int main()
         {
             res_i = M / prod(comb[i]);
         }
-        cout << "res_i =" << res_i << '\n';
+        // cout << "res_i =" << res_i << '\n';
         result += res_i;
-        cout << "result =" << result << '\n';
+        // cout << "result =" << result << '\n';
     }
 
     cout << result << '\n';
