@@ -3,11 +3,8 @@
 
 using namespace std;
 
-const int MAX_N = 100; // Максимальное количество элементов
-const int MAX_R = 10;  // Максимальный размер сочетания
-
-vector<int> A(MAX_R);   // Вектор для хранения текущего сочетания
-vector<int> dop(MAX_N); // Вспомогательный вектор для подсчета повторений
+vector<int> A = {};   // Вектор для хранения текущего сочетания
+vector<int> dop = {}; // Вспомогательный вектор для подсчета повторений
 
 vector<vector<int>> result = {};
 void Sochet_BP(int k, int l, int r, int n)
@@ -17,11 +14,11 @@ void Sochet_BP(int k, int l, int r, int n)
         vector<int> res = {};
         for (int i = l; i <= r; ++i)
         {
-            cout << A[i] << " ";
+            // cout << A[i] << " ";
             res.push_back(A[i]);
         }
         result.push_back(res);
-        cout << endl;
+        // cout << endl;
     }
     else
     {
@@ -44,18 +41,100 @@ void Sochet_BP(int k, int l, int r, int n)
     }
 }
 
+// здесь берем 1/3 - 1,2,3, 2/3 - 1-2,2-3,1-3 , 3/3 - 1-2-3
+void genericMassivSochet(int n)
+{
+    // r - размер сочетания
+    for (int r = 1; r <= n; r++)
+    {
+        dop.resize(n);
+        A.resize(n);
+        for (int i = 1; i <= n; ++i)
+        {
+            dop[i] = r;
+            A[i] = i;
+        }
+
+        Sochet_BP(1, 1, r, n);
+    }
+}
+
+int prod(vector<int> vec)
+{
+    int result = 1;
+    for (size_t i = 0; i < vec.size(); i++)
+    {
+        result *= vec[i];
+    }
+    return result;
+}
+
+void print(vector<int> dels)
+{
+    for (size_t i = 0; i < dels.size(); ++i)
+    {
+        cout << dels[i] << ' ';
+    }
+}
+
+void printt(vector<vector<int>> dels)
+{
+    for (size_t i = 0; i < dels.size(); ++i)
+    {
+        for (size_t j = 0; j < dels[i].size(); ++j)
+        {
+            cout << dels[i][j] << ' ';
+        }
+        cout << '\n';
+    }
+}
+
+int FormulaIncludeExclude(vector<vector<int>> comb, int M)
+{
+    int result = 0;
+    for (size_t i = 0; i < comb.size(); ++i)
+    {
+        size_t size = comb[i].size();
+        int res_i;
+        if (size % 2 != 0)
+        {
+            res_i = -M / prod(comb[i]);
+        }
+        else
+        {
+            res_i = M / prod(comb[i]);
+        }
+        // cout << "res_i =" << res_i << '\n';
+        result += res_i;
+        // cout << "result =" << result << '\n';
+    }
+    return result;
+}
+
 int main()
 {
-    int n = 3; // Количество элементов
-    int r = 2; // Размер сочетания
+    int n = 4; // Количество элементов
+    genericMassivSochet(n);
 
-    for (int i = 1; i <= n; ++i)
-    {
-        dop[i] = r;
-    }
+    // for (size_t i = 0; i < result.size(); ++i)
+    // {
+    //     for (size_t j = 0; j < result[i].size(); ++j)
+    //     {
+    //         cout << result[i][j] << ' ';
+    //     }
+    //     cout << '\n';
+    // }
 
-    Sochet_BP(1, 1, r, n);
-
+    system("pause");
+    system("pause");
+    system("pause");
+    system("pause");
+    system("pause");
+    system("pause");
+    system("pause");
+    system("pause");
+    system("pause");
+    system("pause");
     system("pause");
     return 0;
 }
