@@ -6,7 +6,8 @@ using namespace std;
 vector<int> A = {};   // Вектор для хранения текущего сочетания
 vector<int> dop = {}; // Вспомогательный вектор для подсчета повторений
 
-vector<vector<int>> result = {};
+vector<vector<int>> combinations = {};
+
 void Sochet_BP(int k, int l, int r, int n)
 {
     if (k == r + 1)
@@ -17,7 +18,7 @@ void Sochet_BP(int k, int l, int r, int n)
             // cout << A[i] << " ";
             res.push_back(A[i]);
         }
-        result.push_back(res);
+        combinations.push_back(res);
         // cout << endl;
     }
     else
@@ -41,7 +42,11 @@ void Sochet_BP(int k, int l, int r, int n)
     }
 }
 
-// здесь берем 1/3 - 1,2,3, 2/3 - 1-2,2-3,1-3 , 3/3 - 1-2-3
+// функция, которая из пустого массива генерирует двумерный массив комбинаций для 3 типа:
+// {{1}, {2}, {3}, {1, 2}, {1, 3}, {2, 3}, {1, 2, 3}}
+// сначала 1/3 - 1,2,3,
+// потом  2/3 - 1-2,2-3,1-3
+// потом 3/3 - 1-2-3
 void genericMassivSochet(int n)
 {
     // r - размер сочетания
@@ -52,23 +57,24 @@ void genericMassivSochet(int n)
         for (int i = 1; i <= n; ++i)
         {
             dop[i] = r;
-            A[i] = i;
         }
 
         Sochet_BP(1, 1, r, n);
     }
 }
 
-int prod(vector<int> vec)
+// вспомогательная функция: продукт
+int prod(vector<int> vec, vector<int> vecOfIndexes)
 {
     int result = 1;
-    for (size_t i = 0; i < vec.size(); i++)
+    for (size_t i = 0; i < vecOfIndexes.size(); i++)
     {
-        result *= vec[i];
+        result *= vec[vecOfIndexes[i] - 1];
     }
     return result;
 }
 
+// вспомогательная функция: вывод одномерного вектора
 void print(vector<int> dels)
 {
     for (size_t i = 0; i < dels.size(); ++i)
@@ -77,6 +83,7 @@ void print(vector<int> dels)
     }
 }
 
+// вспомогательная функция: вывод двумерного вектора
 void printt(vector<vector<int>> dels)
 {
     for (size_t i = 0; i < dels.size(); ++i)
@@ -89,41 +96,49 @@ void printt(vector<vector<int>> dels)
     }
 }
 
-int FormulaIncludeExclude(vector<vector<int>> comb, int M)
+// функция подсчета количества делителей по формуле вулючения и исключения
+int FormulaIncludeExclude(vector<int> dels, int M)
 {
-    int result = 0;
-    for (size_t i = 0; i < comb.size(); ++i)
+    int result = M;
+    for (size_t i = 0; i < combinations.size(); ++i)
     {
-        size_t size = comb[i].size();
+        size_t size = combinations[i].size();
         int res_i;
         if (size % 2 != 0)
         {
-            res_i = -M / prod(comb[i]);
+            res_i = -M / prod(dels, combinations[i]);
         }
         else
         {
-            res_i = M / prod(comb[i]);
+            res_i = +M / prod(dels, combinations[i]);
         }
         // cout << "res_i =" << res_i << '\n';
         result += res_i;
-        // cout << "result =" << result << '\n';
+        // cout << "combinations =" << combinations << '\n';
     }
     return result;
 }
 
+// // Примеры:
+// // 100 {2, 5}
+// // 100 - 100/2 - 100/5 + 100/(2*5) = 40
+
+// // 100 {2, 3, 4}
+// // 24
+
+// // 1000 {2, 3, 4}
+// //  1000 - 1000/2 - 1000/3 - 1000/4 + 1000/2*3 + 1000/2*4 + 1000/3*4 - 1000/2*3*4 = 250
+
 int main()
 {
-    int n = 4; // Количество элементов
+    int M = 1000;
+    vector<int> dels = {2, 3, 4};
+    int n = dels.size(); // Количество элементов
     genericMassivSochet(n);
 
-    // for (size_t i = 0; i < result.size(); ++i)
-    // {
-    //     for (size_t j = 0; j < result[i].size(); ++j)
-    //     {
-    //         cout << result[i][j] << ' ';
-    //     }
-    //     cout << '\n';
-    // }
+    printt(combinations);
+
+    cout << FormulaIncludeExclude(dels, M) << "\n\n\n";
 
     system("pause");
     system("pause");
